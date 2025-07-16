@@ -1,0 +1,38 @@
+{
+    "name": "SmartSport_Backend",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "repository": "https://github.com/moyazo/SmartSport_Backend.git",
+    "author": "Manuel Moya Vadillo <manuel.moyavadillo2@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "start": "yarn prettier --write && sequelize-cli db:migrate && nodemon index.js  .",
+        "startdb": "docker-compose up",
+        "stopdb": "docker compose down",
+        "prettier": "prettier --write ."
+    },
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "cors": "^2.8.5",
+        "docker": "^1.0.0",
+        "dotenv": "^17.2.0",
+        "express": "^5.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "nodemon": "^3.1.10",
+        "path": "^0.12.7",
+        "pg": "^8.16.3",
+        "pg-hstore": "^2.3.4",
+        "prettier": "^3.6.2",
+        "sequelize": "^6.37.7",
+        "sequelize-cli": "^6.6.3",
+        "uuid": "^11.1.0"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.3",
+        "@types/node": "^24.0.14",
+        "@types/sequelize": "^6.12.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    }
+}
