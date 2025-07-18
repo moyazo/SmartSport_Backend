@@ -5,6 +5,7 @@ import {
   Model,
   Optional
  } from 'sequelize';
+import { ForeignKey } from 'sequelize-typescript';
 
 interface UserAttributes {
     id: string,
@@ -14,6 +15,9 @@ interface UserAttributes {
     username: string,
     role: string,
     age: number,
+    diet_id: string,
+    rutine_id: string,
+    training_id: string,
     createdAt: Date,
     updatedAt: Date
 }
@@ -27,6 +31,9 @@ export default (sequelize: Sequelize) => {
     public email!: string;
     public password!: string;
     public username!: string;
+    public diet_id!: string;
+    public training_id!: string;
+    public rutine_id!: string;
     public role!: string;
     public age!: number;
 
@@ -36,6 +43,10 @@ export default (sequelize: Sequelize) => {
     static associate(models: any) {
       // Define asociaciones aquí si tienes
       // Ejemplo: User.hasMany(models.Post);
+      User.hasOne(models.Diet);
+      User.hasOne(models.Rutine);
+      User.hasOne(models.Training);
+      User.hasMany(models.Goals);
     }
   }
 
@@ -67,6 +78,30 @@ export default (sequelize: Sequelize) => {
       },
       age: {
         type: new DataTypes.NUMBER,
+        allowNull: false,
+      },
+      diet_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'diet',
+          key: 'id'
+        },
+        allowNull: false,
+      },
+      rutine_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'rutine',
+          key: 'id'
+        },
+        allowNull: false,
+      },
+      training_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'training',
+          key: 'id'
+        },
         allowNull: false,
       },
       createdAt: {

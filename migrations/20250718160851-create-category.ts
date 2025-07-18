@@ -11,6 +11,10 @@ export  async function up(queryInterface: QueryInterface) {
         allowNull: false,
         type: DataTypes.TEXT
       },
+      type: {
+        allowNull: false,
+        type: DataTypes.ENUM("[Diet, Training]")
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

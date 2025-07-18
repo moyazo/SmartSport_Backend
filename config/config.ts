@@ -11,7 +11,6 @@ export interface DBConfig {
     dialect: 'postgres';
     use_env_variable?: string; // <- esto es lo importante
 }
-
 export const configDB: Record<string, DBConfig> = {
     development: {
         username: process.env.POSTGRES_USER || 'admin',

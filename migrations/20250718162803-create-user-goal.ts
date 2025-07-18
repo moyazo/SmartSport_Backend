@@ -2,18 +2,31 @@
 /** @type {import('sequelize-cli').Migration} */
 import { QueryInterface, DataTypes } from 'sequelize';
 export  async function up(queryInterface: QueryInterface) {
-    await queryInterface.createTable('subcategory', {
+    await queryInterface.createTable('usergoal', {
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
+        allowNull: false
       },
-      name: {
+      user_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'user',
+          key: 'id'
+        },
         allowNull: false,
-        type: DataTypes.TEXT
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      type: {
+      goal_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'goal',
+          key: 'id'
+        },
         allowNull: false,
-        type: DataTypes.ENUM("[Diet, Training]")
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -27,5 +40,5 @@ export  async function up(queryInterface: QueryInterface) {
 };
 
   export async function down(queryInterface: QueryInterface) {
-  await queryInterface.dropTable('subcategory');
+  await queryInterface.dropTable('usergoal');
 }

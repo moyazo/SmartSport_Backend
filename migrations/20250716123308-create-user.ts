@@ -29,8 +29,38 @@ export  async function up(queryInterface: QueryInterface) {
         allowNull: false,
       },
       age: {
-        type: new DataTypes.NUMBER,
+        type: new DataTypes.INTEGER,
         allowNull: false,
+      },
+      diet_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'diet',
+          key: 'id'
+        },
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      rutine_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'rutine',
+          key: 'id'
+        },
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      training_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'training',
+          key: 'id'
+        },
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

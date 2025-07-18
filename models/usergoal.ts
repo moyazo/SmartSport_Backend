@@ -6,44 +6,52 @@ import {
   Optional
  } from 'sequelize';
 
-interface DietAttributes {
+interface UserGoalAttributes {
     id: string,
-    name: string,
-    description: string,
+    user_id: string,
+    goal_id: string,
     createdAt: Date,
     updatedAt: Date
 }
 
-interface DietCreationAttributes extends Optional<DietAttributes, 'id'> {}
+interface UserGoalCreationAttributes extends Optional<UserGoalAttributes, 'id'> {}
 
 export default (sequelize: Sequelize) => {
-  class Diet extends Model<DietAttributes, DietCreationAttributes> implements DietAttributes {
+  class UserGoal extends Model<UserGoalAttributes, UserGoalCreationAttributes> implements UserGoalAttributes {
     public id!: string;
-    public name!: string;
-    public description!: string;
+    public user_id!: string;
+    public goal_id!: string;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 
     static associate(models: any) {
       // Define asociaciones aquí si tienes
-      // Ejemplo: Diet.hasMany(models.Post);
-      Diet.hasOne(models.Category);
+      // Ejemplo: UserGoal.hasMany(models.Post);
     }
   }
 
-  Diet.init(
+  UserGoal.init(
     {
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
+        allowNull: false
       },
-      name: {
+      user_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'user',
+          key: 'id'
+        },
         allowNull: false,
-        type: DataTypes.TEXT
       },
-      description: {
+      goal_id: {
+        type: new DataTypes.UUID,
+        references: {
+          model: 'goal',
+          key: 'id'
+        },
         allowNull: false,
-        type: DataTypes.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -56,9 +64,9 @@ export default (sequelize: Sequelize) => {
     },
     {
       sequelize,
-      tableName: 'diet',
+      tableName: 'usergoal',
     }
   );
 
-  return Diet;
+  return UserGoal;
 };

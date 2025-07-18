@@ -27,6 +27,7 @@ export default (sequelize: Sequelize) => {
     static associate(models: any) {
       // Define asociaciones aquí si tienes
       // Ejemplo: Goal.hasMany(models.Post);
+      Goal.hasMany(models.User);
     }
   }
 
