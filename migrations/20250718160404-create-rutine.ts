@@ -2,35 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 import { QueryInterface, DataTypes } from 'sequelize';
 export  async function up(queryInterface: QueryInterface) {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('rutine', {
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
-        allowNull: false,
       },
       name: {
-        type: new DataTypes.TEXT,
         allowNull: false,
+        type: DataTypes.TEXT
       },
-      email: {
-        type: new DataTypes.TEXT,
+      description: {
         allowNull: false,
-      },
-      password: {
-        type: new DataTypes.TEXT,
-        allowNull: false,
-      },
-      username: {
-        type: new DataTypes.TEXT,
-        allowNull: false,
-      },
-      role: {
-        type: new DataTypes.ENUM("['ADMIN','NORMAL']"),
-        allowNull: false,
-      },
-      age: {
-        type: new DataTypes.NUMBER,
-        allowNull: false,
+        type: DataTypes.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -44,5 +27,5 @@ export  async function up(queryInterface: QueryInterface) {
 };
 
   export async function down(queryInterface: QueryInterface) {
-  await queryInterface.dropTable('user');
+  await queryInterface.dropTable('rutine');
 }
