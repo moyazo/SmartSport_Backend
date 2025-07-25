@@ -1,5 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { createUser, getAll, getById, modifyUser, removeUser } from '../controllers/users';
+import {
+    createUser,
+    getAll,
+    getById,
+    modifyUser,
+    removeUser,
+} from '../controllers/users';
 const userRouter = Router();
 
 userRouter.get('/', async (request: Request, response: Response) => {
@@ -34,9 +40,13 @@ userRouter.post('/', async (request: Request, response: Response) => {
     try {
         const created = await createUser(body);
         if (!created) {
-            return response.status(400).json({ message: 'Failed to create user' });
+            return response
+                .status(400)
+                .json({ message: 'Failed to create user' });
         }
-        return response.status(201).json({ message: 'User created successfully' });
+        return response
+            .status(201)
+            .json({ message: 'User created successfully' });
     } catch (error) {
         console.error('Error creating user:', error);
         return response.status(500).json({ message: 'Internal server error' });
@@ -49,9 +59,13 @@ userRouter.put('/:id', async (request: Request, response: Response) => {
     try {
         const modified = await modifyUser(id, body);
         if (!modified) {
-            return response.status(400).json({ message: 'Failed to modify user' });
+            return response
+                .status(400)
+                .json({ message: 'Failed to modify user' });
         }
-        return response.status(200).json({ message: 'User modified successfully' });
+        return response
+            .status(200)
+            .json({ message: 'User modified successfully' });
     } catch (error) {
         console.error('Error modifying user:', error);
         return response.status(500).json({ message: 'Internal server error' });
@@ -63,14 +77,17 @@ userRouter.delete('/:id', async (request: Request, response: Response) => {
     try {
         const deleted = await removeUser(id);
         if (!deleted) {
-            return response.status(400).json({ message: 'Failed to delete user' });
+            return response
+                .status(400)
+                .json({ message: 'Failed to delete user' });
         }
-        return response.status(200).json({ message: 'User deleted successfully' });
+        return response
+            .status(200)
+            .json({ message: 'User deleted successfully' });
     } catch (error) {
         console.error('Error deleting user:', error);
         return response.status(500).json({ message: 'Internal server error' });
     }
 });
-
 
 export default userRouter;

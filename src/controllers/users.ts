@@ -37,9 +37,9 @@ export const getByEmail = async (
     return userFound;
 };
 
-
-
-export const createUser = async (body: InferCreationAttributes<typeof user>): Promise<boolean> => {
+export const createUser = async (
+    body: InferCreationAttributes<typeof user>
+): Promise<boolean> => {
     if (!body) {
         return false;
     }
