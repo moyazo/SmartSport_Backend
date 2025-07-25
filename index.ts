@@ -9,6 +9,7 @@ const users = db.sequelize.models.User;
 import ensureAuthentication from './src/middleware/auth';
 import authRoutes from './src/routes/auth';
 import userRoutes from './src/routes/users';
+import categoriesRoutes from './src/routes/category';
 
 const startApp = async () => {
     const app: Express = express();
@@ -24,6 +25,7 @@ const startApp = async () => {
     app.use(ensureAuthentication);
     app.use('/auth', authRoutes);
     app.use('/users', userRoutes);
+    app.use('/categories', categoriesRoutes);
     try {
         console.log(users.model);
         app.listen(port, () => {

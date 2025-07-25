@@ -8,12 +8,10 @@ export async function up(queryInterface: QueryInterface) {
             primaryKey: true,
         },
         name: {
-            allowNull: false,
             type: DataTypes.TEXT,
         },
         type: {
-            allowNull: false,
-            type: DataTypes.ENUM('[Diet, Training]'),
+            type: DataTypes.ENUM('Diet', 'Training'),
         },
         createdAt: {
             allowNull: false,

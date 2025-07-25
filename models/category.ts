@@ -19,6 +19,7 @@ import Training from './training';
 import Diet from './diet';
 import Subcategory from './subcategory';
 import CategorySubcategory from './categorysubcategory';
+import { CategoryType } from '../src/common/CategoryType';
 
 @Table({
     tableName: 'categories',
@@ -29,13 +30,11 @@ export default class Category extends Model<Category> {
     @Column(DataType.UUID)
     declare id: string;
 
-    @AllowNull(false)
     @Column(DataType.TEXT)
     name!: string;
 
-    @AllowNull(false)
-    @Column(DataType.ENUM('Diet', 'Training')) // ENUM corregido
-    type!: string;
+    @Column(DataType.ENUM(...Object.values(CategoryType)))
+    type!: CategoryType;
 
     @CreatedAt
     @Column(DataType.DATE)
