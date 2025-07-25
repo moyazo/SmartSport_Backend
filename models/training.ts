@@ -1,64 +1,56 @@
-import { UUID } from 'crypto';
-import { 
-  Sequelize,
-  DataTypes,
-  Model,
-  Optional
- } from 'sequelize';
+// models/training.ts
 
-interface TrainingAttributes {
-    id: string,
-    name: string,
-    description: string,
-    createdAt: Date,
-    updatedAt: Date
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    PrimaryKey,
+    Default,
+    AllowNull,
+    CreatedAt,
+    UpdatedAt,
+    HasOne,
+    HasMany,
+    ForeignKey,
+    BelongsTo,
+} from 'sequelize-typescript';
+import { v4 as uuidv4 } from 'uuid';
+import Category from './category'; // Asumiendo que existe
+import User from './user';
+
+@Table({
+    tableName: 'Trainings',
+})
+export default class Training extends Model<Training> {
+    @PrimaryKey
+    @Default(uuidv4)
+    @Column(DataType.UUID)
+    declare id: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    name!: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    description!: string;
+
+    @ForeignKey(() => Category)
+    @AllowNull(false)
+    @Column(DataType.UUID)
+    category_id!: string;
+
+    @Column(DataType.DATE)
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column(DataType.DATE)
+    declare updatedAt: Date;
+
+    @BelongsTo(() => Category)
+    category!: Category;
+
+    @HasMany(() => User)
+    users!: User[];
 }
-
-interface TrainingCreationAttributes extends Optional<TrainingAttributes, 'id'> {}
-
-export default (sequelize: Sequelize) => {
-  class Training extends Model<TrainingAttributes, TrainingCreationAttributes> implements TrainingAttributes {
-    public id!: string;
-    public name!: string;
-    public description!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-
-    static associate(models: any) {
-      // Define asociaciones aquí si tienes
-      // Ejemplo: Training.hasMany(models.Post);
-      Training.hasOne(models.Category);
-    }
-  }
-
-  Training.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-      },
-      name: {
-        allowNull: false,
-        type: DataTypes.TEXT
-      },
-      description: {
-        allowNull: false,
-        type: DataTypes.TEXT
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      }
-    },
-    {
-      sequelize,
-      tableName: 'training',
-    }
-  );
-
-  return Training;
-};

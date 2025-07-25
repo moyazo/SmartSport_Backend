@@ -1,4 +1,4 @@
-// models/diet.ts
+// models/goal.ts
 
 import {
     Table,
@@ -10,19 +10,18 @@ import {
     AllowNull,
     CreatedAt,
     UpdatedAt,
-    HasOne,
     HasMany,
     ForeignKey,
-    BelongsTo,
+    BelongsToMany,
 } from 'sequelize-typescript';
 import { v4 as uuidv4 } from 'uuid';
-import Category from './category'; // Asegúrate de importar correctamente
-import User from './user';
+import User from './user'; // Asegúrate de importar el modelo
+import UserGoal from './usergoal';
 
 @Table({
-    tableName: 'Diets',
+    tableName: 'Goals',
 })
-export default class Diet extends Model<Diet> {
+export default class Goal extends Model<Goal> {
     @PrimaryKey
     @Default(uuidv4)
     @Column(DataType.UUID)
@@ -36,10 +35,10 @@ export default class Diet extends Model<Diet> {
     @Column(DataType.TEXT)
     description!: string;
 
-    @ForeignKey(() => Category)
+    @ForeignKey(() => User)
     @AllowNull(false)
     @Column(DataType.UUID)
-    category_id!: string;
+    user_id!: string;
 
     @CreatedAt
     @Column(DataType.DATE)
@@ -49,9 +48,6 @@ export default class Diet extends Model<Diet> {
     @Column(DataType.DATE)
     declare updatedAt: Date;
 
-    @BelongsTo(() => Category)
-    category!: Category;
-
-    @HasMany(() => User)
+    @BelongsToMany(() => User, () => UserGoal)
     users!: User[];
 }

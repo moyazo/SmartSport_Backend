@@ -1,63 +1,46 @@
-import { UUID } from 'crypto';
-import { 
-  Sequelize,
-  DataTypes,
-  Model,
-  Optional
- } from 'sequelize';
+// models/rutine.ts
 
-interface RutineAttributes {
-    id: string,
-    name: string,
-    description: string,
-    createdAt: Date,
-    updatedAt: Date
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    PrimaryKey,
+    Default,
+    AllowNull,
+    CreatedAt,
+    UpdatedAt,
+    ForeignKey,
+    HasMany,
+} from 'sequelize-typescript';
+import { v4 as uuidv4 } from 'uuid';
+import User from './user';
+
+@Table({
+    tableName: 'Rutines',
+})
+export default class Rutine extends Model<Rutine> {
+    @PrimaryKey
+    @Default(uuidv4)
+    @Column(DataType.UUID)
+    declare id: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    name!: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    description!: string;
+
+    @CreatedAt
+    @Column(DataType.DATE)
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column(DataType.DATE)
+    declare updatedAt: Date;
+
+    @HasMany(() => User)
+    users!: User;
 }
-
-interface RutineCreationAttributes extends Optional<RutineAttributes, 'id'> {}
-
-export default (sequelize: Sequelize) => {
-  class Rutine extends Model<RutineAttributes, RutineCreationAttributes> implements RutineAttributes {
-    public id!: string;
-    public name!: string;
-    public description!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-
-    static associate(models: any) {
-      // Define asociaciones aquí si tienes
-      // Ejemplo: Rutine.hasMany(models.Post);
-    }
-  }
-
-  Rutine.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-      },
-      name: {
-        allowNull: false,
-        type: DataTypes.TEXT
-      },
-      description: {
-        allowNull: false,
-        type: DataTypes.TEXT
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      }
-    },
-    {
-      sequelize,
-      tableName: 'rutine',
-    }
-  );
-
-  return Rutine;
-};

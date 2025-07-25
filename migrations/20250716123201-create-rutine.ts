@@ -2,12 +2,12 @@
 /** @type {import('sequelize-cli').Migration} */
 import { QueryInterface, DataTypes } from 'sequelize';
 export async function up(queryInterface: QueryInterface) {
-    await queryInterface.createTable('Scene', {
+    await queryInterface.createTable('Rutines', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
         },
-        title: {
+        name: {
             allowNull: false,
             type: DataTypes.TEXT,
         },
@@ -27,5 +27,5 @@ export async function up(queryInterface: QueryInterface) {
 }
 
 export async function down(queryInterface: QueryInterface) {
-    await queryInterface.dropTable('Scene');
+    await queryInterface.dropTable('Rutines');
 }

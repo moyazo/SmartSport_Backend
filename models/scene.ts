@@ -1,63 +1,40 @@
-import { UUID } from 'crypto';
-import { 
-  Sequelize,
-  DataTypes,
-  Model,
-  Optional
- } from 'sequelize';
+// models/scene.ts
 
-interface SceneAttributes {
-    id: string,
-    title: string,
-    description: string,
-    createdAt: Date,
-    updatedAt: Date
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    PrimaryKey,
+    Default,
+    AllowNull,
+    CreatedAt,
+    UpdatedAt,
+} from 'sequelize-typescript';
+import { v4 as uuidv4 } from 'uuid';
+
+@Table({
+    tableName: 'Scene',
+})
+export default class Scene extends Model<Scene> {
+    @PrimaryKey
+    @Default(() => uuidv4())
+    @Column(DataType.UUID)
+    declare id: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    title!: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    description!: string;
+
+    @CreatedAt
+    @Column(DataType.DATE)
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column(DataType.DATE)
+    declare updatedAt: Date;
 }
-
-interface SceneCreationAttributes extends Optional<SceneAttributes, 'id'> {}
-
-export default (sequelize: Sequelize) => {
-  class Scene extends Model<SceneAttributes, SceneCreationAttributes> implements SceneAttributes {
-    public id!: string;
-    public title!: string;
-    public description!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-
-    static associate(models: any) {
-      // Define asociaciones aquí si tienes
-      // Ejemplo: Scene.hasMany(models.Post);
-    }
-  }
-
-  Scene.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-      },
-      title: {
-        allowNull: false,
-        type: DataTypes.TEXT
-      },
-      description: {
-        allowNull: false,
-        type: DataTypes.TEXT
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      }
-    },
-    {
-      sequelize,
-      tableName: 'scene',
-    }
-  );
-
-  return Scene;
-};

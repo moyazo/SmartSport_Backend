@@ -1,72 +1,54 @@
-import { UUID } from 'crypto';
-import { 
-  Sequelize,
-  DataTypes,
-  Model,
-  Optional
- } from 'sequelize';
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    ForeignKey,
+    CreatedAt,
+    UpdatedAt,
+} from 'sequelize-typescript';
+import { v4 as uuidv4 } from 'uuid';
+import Category from './category';
+import Subcategory from './subcategory';
 
-interface CategorySubcategoryAttributes {
-    id: string,
-    category_id: string,
-    subcategory_id: string,
-    createdAt: Date,
-    updatedAt: Date
-}
-
-interface CategorySubcategoryCreationAttributes extends Optional<CategorySubcategoryAttributes, 'id'> {}
-
-export default (sequelize: Sequelize) => {
-  class CategorySubcategory extends Model<CategorySubcategoryAttributes, CategorySubcategoryCreationAttributes> implements CategorySubcategoryAttributes {
-    public id!: string;
-    public category_id!: string;
-    public subcategory_id!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-
-    static associate(models: any) {
-      // Define asociaciones aquí si tienes
-      // Ejemplo: CategorySubcategory.hasMany(models.Post);
-    }
-  }
-
-  CategorySubcategory.init(
-    {
-      id: {
-        type: DataTypes.UUID,
+@Table({
+    tableName: 'CategorySubcategories',
+    timestamps: true,
+})
+export default class CategorySubcategory extends Model<CategorySubcategory> {
+    @Column({
+        type: DataType.UUID,
         primaryKey: true,
-        allowNull: false
-      },
-      category_id: {
-        type: new DataTypes.UUID,
-        references: {
-          model: 'category',
-          key: 'id'
-        },
         allowNull: false,
-      },
-      subcategory_id: {
-        type: new DataTypes.UUID,
-        references: {
-          model: 'category',
-          key: 'id'
-        },
-        allowNull: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      }
-    },
-    {
-      sequelize,
-      tableName: 'CategorySubcategory',
-    }
-  );
+        defaultValue: () => uuidv4(),
+    })
+    declare id: string;
 
-  return CategorySubcategory;
-};
+    @ForeignKey(() => Category)
+    @Column({
+        type: DataType.UUID,
+        allowNull: false,
+    })
+    category_id!: string;
+
+    @ForeignKey(() => Subcategory)
+    @Column({
+        type: DataType.UUID,
+        allowNull: false,
+    })
+    subCategory_id!: string;
+
+    @CreatedAt
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+    })
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+    })
+    declare updatedAt: Date;
+}

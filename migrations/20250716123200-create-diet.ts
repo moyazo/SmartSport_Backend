@@ -2,18 +2,28 @@
 /** @type {import('sequelize-cli').Migration} */
 import { QueryInterface, DataTypes } from 'sequelize';
 export async function up(queryInterface: QueryInterface) {
-    await queryInterface.createTable('Scene', {
+    await queryInterface.createTable('Diets', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
         },
-        title: {
+        name: {
             allowNull: false,
             type: DataTypes.TEXT,
         },
         description: {
             allowNull: false,
             type: DataTypes.TEXT,
+        },
+        category_id: {
+            type: new DataTypes.UUID(),
+            references: {
+                model: 'Categories',
+                key: 'id',
+            },
+            allowNull: false,
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
         },
         createdAt: {
             allowNull: false,
@@ -27,5 +37,5 @@ export async function up(queryInterface: QueryInterface) {
 }
 
 export async function down(queryInterface: QueryInterface) {
-    await queryInterface.dropTable('Scene');
+    await queryInterface.dropTable('Diets');
 }

@@ -1,72 +1,55 @@
-import { UUID } from 'crypto';
-import { 
-  Sequelize,
-  DataTypes,
-  Model,
-  Optional
- } from 'sequelize';
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    ForeignKey,
+    CreatedAt,
+    UpdatedAt,
+    PrimaryKey,
+} from 'sequelize-typescript';
+import { v4 as uuidv4 } from 'uuid';
+import User from './user';
+import Goal from './goal';
 
-interface UserGoalAttributes {
-    id: string,
-    user_id: string,
-    goal_id: string,
-    createdAt: Date,
-    updatedAt: Date
+@Table({
+    tableName: 'UsersGoals',
+    timestamps: true,
+})
+export default class UserGoal extends Model<UserGoal> {
+    @PrimaryKey
+    @Column({
+        type: DataType.UUID,
+        allowNull: false,
+        defaultValue: () => uuidv4(),
+    })
+    declare id: string;
+
+    @ForeignKey(() => User)
+    @Column({
+        type: DataType.UUID,
+        allowNull: false,
+    })
+    declare user_id: string;
+
+    @ForeignKey(() => Goal)
+    @Column({
+        type: DataType.UUID,
+        allowNull: false,
+    })
+    declare goal_id: string;
+
+    @CreatedAt
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+    })
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+    })
+    declare updatedAt: Date;
 }
-
-interface UserGoalCreationAttributes extends Optional<UserGoalAttributes, 'id'> {}
-
-export default (sequelize: Sequelize) => {
-  class UserGoal extends Model<UserGoalAttributes, UserGoalCreationAttributes> implements UserGoalAttributes {
-    public id!: string;
-    public user_id!: string;
-    public goal_id!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-
-    static associate(models: any) {
-      // Define asociaciones aquí si tienes
-      // Ejemplo: UserGoal.hasMany(models.Post);
-    }
-  }
-
-  UserGoal.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        allowNull: false
-      },
-      user_id: {
-        type: new DataTypes.UUID,
-        references: {
-          model: 'user',
-          key: 'id'
-        },
-        allowNull: false,
-      },
-      goal_id: {
-        type: new DataTypes.UUID,
-        references: {
-          model: 'goal',
-          key: 'id'
-        },
-        allowNull: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      }
-    },
-    {
-      sequelize,
-      tableName: 'usergoal',
-    }
-  );
-
-  return UserGoal;
-};

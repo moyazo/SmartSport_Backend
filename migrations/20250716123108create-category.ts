@@ -2,18 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 import { QueryInterface, DataTypes } from 'sequelize';
 export async function up(queryInterface: QueryInterface) {
-    await queryInterface.createTable('Scene', {
+    await queryInterface.createTable('Categories', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
         },
-        title: {
+        name: {
             allowNull: false,
             type: DataTypes.TEXT,
         },
-        description: {
+        type: {
             allowNull: false,
-            type: DataTypes.TEXT,
+            type: DataTypes.ENUM('[Diet, Training]'),
         },
         createdAt: {
             allowNull: false,
@@ -27,5 +27,5 @@ export async function up(queryInterface: QueryInterface) {
 }
 
 export async function down(queryInterface: QueryInterface) {
-    await queryInterface.dropTable('Scene');
+    await queryInterface.dropTable('Categories');
 }

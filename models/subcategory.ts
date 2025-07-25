@@ -1,64 +1,48 @@
-import { UUID } from 'crypto';
-import { 
-  Sequelize,
-  DataTypes,
-  Model,
-  Optional
- } from 'sequelize';
+// models/Subcategory.ts
 
-interface SubcategorysAttributes {
-    id: string,
-    name: string,
-    type: string,
-    createdAt: Date,
-    updatedAt: Date
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    PrimaryKey,
+    Default,
+    AllowNull,
+    CreatedAt,
+    UpdatedAt,
+    HasMany,
+    ForeignKey,
+    BelongsToMany,
+} from 'sequelize-typescript';
+import { v4 as uuidv4 } from 'uuid';
+import Category from './category'; // Asumiendo que existe
+import CategorySubcategory from './categorysubcategory';
+
+@Table({
+    tableName: 'SubCategories',
+})
+export default class Subcategory extends Model<Subcategory> {
+    @PrimaryKey
+    @Default(uuidv4)
+    @Column(DataType.UUID)
+    declare id: string;
+
+    @AllowNull(false)
+    @Column(DataType.TEXT)
+    name!: string;
+
+    @AllowNull(false)
+    @Column(DataType.ENUM('Diet', 'Training')) // Corrigido el enum
+    type!: string;
+
+    @CreatedAt
+    @Column(DataType.DATE)
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column(DataType.DATE)
+    declare updatedAt: Date;
+
+    @BelongsToMany(() => Category, () => CategorySubcategory)
+    categories!: Category[];
 }
-
-interface SubcategorysCreationAttributes extends Optional<SubcategorysAttributes, 'id'> {}
-
-export default (sequelize: Sequelize) => {
-  class Subcategorys extends Model<SubcategorysAttributes, SubcategorysCreationAttributes> implements SubcategorysAttributes {
-    public id!: string;
-    public name!: string;
-    public type!: string;
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-
-    static associate(models: any) {
-      // Define asociaciones aquí si tienes
-      // Ejemplo: Subcategorys.hasMany(models.Post);
-      Subcategorys.hasMany(models.Category);
-    }
-  }
-
-  Subcategorys.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-      },
-      name: {
-        allowNull: false,
-        type: DataTypes.TEXT
-      },
-      type: {
-        allowNull: false,
-        type: DataTypes.ENUM("[Diet, Training]")
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      }
-    },
-    {
-      sequelize,
-      tableName: 'subcategory',
-    }
-  );
-
-  return Subcategorys;
-};

@@ -3,11 +3,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './models';
-import sequelize from './src/db';
-import { Model } from 'sequelize';
-const users = await db.sequelize
-
-
+import User from './models/user';
+const users = db.sequelize.models.User;
 
 const startApp = async () => {
     const app: Express = express();
@@ -33,3 +30,4 @@ const startApp = async () => {
         process.exit(1);
     }
 };
+startApp();

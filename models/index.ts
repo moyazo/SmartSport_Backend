@@ -1,48 +1,54 @@
 import fs from 'fs';
 import path from 'path';
-import { Sequelize } from 'sequelize';
+import 'reflect-metadata';
+import { Sequelize } from 'sequelize-typescript';
 import { configDB } from '../config/config';
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = configDB[env];
 
-const sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password ?? '',
-    {
-        host: config.host,
-        dialect: 'postgres',
-        port: Number(config.port),
-    }
-);
+// Crear lista de modelos válidos
+const models: any[] = [];
 
-const db: { [key: string]: any } = {};
-
-// Carga dinámica de modelos (sin cargar este archivo mismo)
 fs.readdirSync(__dirname)
-    .filter(
-        (file) =>
+    .filter((file) => {
+        return (
             file.indexOf('.') !== 0 &&
             file !== basename &&
             (file.endsWith('.ts') || file.endsWith('.js'))
-    )
+        );
+    })
     .forEach((file) => {
-        const modelImport = require(path.join(__dirname, file));
-        // Se asume que exportas default la función que recibe sequelize y retorna el modelo
-        const model = modelImport.default(sequelize);
-        db[model.name] = model;
+        const modelPath = path.join(__dirname, file);
+        const modelModule = require(modelPath);
+        const model = modelModule.default || modelModule;
+
+        // Validar que el modelo sea una clase con decoradores
+        if (typeof model === 'function') {
+            models.push(model);
+        }
     });
 
-// Si algún modelo tiene método associate para definir relaciones
-Object.keys(db).forEach((modelName) => {
-    if (db[modelName].associate) {
-        db[modelName].associate(db);
-    }
+const sequelize = new Sequelize({
+    database: config.database,
+    username: config.username,
+    password: config.password ?? '',
+    host: config.host,
+    port: Number(config.port),
+    dialect: 'postgres',
+    models, // array con todas las clases de modelo
+    logging: false, // desactiva logs SQL en consola
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+const db: { [key: string]: any } = {
+    sequelize,
+    Sequelize,
+};
+
+// Agregamos cada modelo como propiedad de `db`
+models.forEach((modelClass) => {
+    db[modelClass.name] = modelClass;
+});
 
 export default db;
