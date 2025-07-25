@@ -1,3 +1,4 @@
+import { InferCreationAttributes } from 'sequelize';
 import db from '../../models';
 const user = db.sequelize.models.User;
 
@@ -36,7 +37,9 @@ export const getByEmail = async (
     return userFound;
 };
 
-export const createUser = async (body: typeof user): Promise<boolean> => {
+
+
+export const createUser = async (body: InferCreationAttributes<typeof user>): Promise<boolean> => {
     if (!body) {
         return false;
     }
@@ -55,7 +58,7 @@ export const createUser = async (body: typeof user): Promise<boolean> => {
 
 export const modifyUser = async (
     id: string,
-    body: typeof user
+    body: InferCreationAttributes<typeof user>
 ): Promise<boolean> => {
     if (!body || !id) {
         return false;
@@ -66,12 +69,7 @@ export const modifyUser = async (
         return false;
     }
 
-    const dataToModify: { [key: string]: any } = {};
-    body.forEach((userData: any) => {
-        if (userData && userData.id) {
-            dataToModify[userData] = userData;
-        }
-    });
+    const dataToModify = { ...body };
 
     const updated = await user.update(dataToModify, { where: { id } });
     if (!updated) {

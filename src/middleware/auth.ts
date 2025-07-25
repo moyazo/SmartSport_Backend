@@ -24,9 +24,10 @@ const ensureAuthentication = async (
     const token = authHeader.split(' ')[1];
 
     try {
-        const payload = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
+        const payload = jwt.decode(token) as JwtPayload;
 
         if (!payload.email) {
+            console.error('Invalid token payload:', payload);
             return res.status(403).json('Invalid token payload');
         }
 

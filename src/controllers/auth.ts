@@ -39,7 +39,7 @@ export const login = async (
     }
 
     return jsonwebtoken.sign(
-        { email: user.email },
+        { email: userFound.email },
         process.env.TOKEN_SECRET || 'default_secret'
     );
 };

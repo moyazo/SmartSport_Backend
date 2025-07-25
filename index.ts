@@ -8,6 +8,7 @@ const users = db.sequelize.models.User;
 // Import ensureAuthentication middleware
 import ensureAuthentication from './src/middleware/auth';
 import authRoutes from './src/routes/auth';
+import userRoutes from './src/routes/users';
 
 const startApp = async () => {
     const app: Express = express();
@@ -22,8 +23,9 @@ const startApp = async () => {
     );
     app.use(ensureAuthentication);
     app.use('/auth', authRoutes);
+    app.use('/users', userRoutes);
     try {
-        console.log(await users.findOne({ where: { email: 'test@test.com' } }));
+        console.log(users.model);
         app.listen(port, () => {
             console.log(`App listening on port ${port}`);
         });
