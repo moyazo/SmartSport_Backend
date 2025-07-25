@@ -19,7 +19,7 @@ import Category from './category'; // Asumiendo que existe
 import CategorySubcategory from './categorysubcategory';
 
 @Table({
-    tableName: 'SubCategories',
+    tableName: 'subcategories',
 })
 export default class Subcategory extends Model<Subcategory> {
     @PrimaryKey

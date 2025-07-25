@@ -14,7 +14,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 @Table({
-    tableName: 'Scene',
+    tableName: 'scenes',
 })
 export default class Scene extends Model<Scene> {
     @PrimaryKey

@@ -13,7 +13,7 @@ import User from './user';
 import Goal from './goal';
 
 @Table({
-    tableName: 'UsersGoals',
+    tableName: 'usergoals',
     timestamps: true,
 })
 export default class UserGoal extends Model<UserGoal> {

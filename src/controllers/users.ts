@@ -1,7 +1,7 @@
 import db from '../../models';
 const user = db.sequelize.models.User;
 
-const getAll = async (): Promise<Array<typeof user> | null> => {
+export const getAll = async (): Promise<Array<typeof user> | null> => {
     const usersFromDB = await user.findAll();
     if (!usersFromDB) {
         return null;
@@ -9,7 +9,7 @@ const getAll = async (): Promise<Array<typeof user> | null> => {
     return usersFromDB;
 };
 
-const getById = async (id: string): Promise<typeof user | null> => {
+export const getById = async (id: string): Promise<typeof user | null> => {
     if (!id) {
         return null;
     }
@@ -21,7 +21,22 @@ const getById = async (id: string): Promise<typeof user | null> => {
     return userFromDB;
 };
 
-const createUser = async (body: typeof user): Promise<boolean> => {
+export const getByEmail = async (
+    email: string
+): Promise<typeof user | null> => {
+    if (!email) {
+        return null;
+    }
+    console.log(email);
+    const userFound = await user.findOne({ where: { email } });
+    if (!userFound) {
+        return null;
+    }
+
+    return userFound;
+};
+
+export const createUser = async (body: typeof user): Promise<boolean> => {
     if (!body) {
         return false;
     }
@@ -38,7 +53,10 @@ const createUser = async (body: typeof user): Promise<boolean> => {
     return true;
 };
 
-const modifyUser = async (id: string, body: typeof user): Promise<boolean> => {
+export const modifyUser = async (
+    id: string,
+    body: typeof user
+): Promise<boolean> => {
     if (!body || !id) {
         return false;
     }
@@ -63,7 +81,7 @@ const modifyUser = async (id: string, body: typeof user): Promise<boolean> => {
     return true;
 };
 
-const removeUser = async (id: string): Promise<boolean> => {
+export const removeUser = async (id: string): Promise<boolean> => {
     if (!id) {
         return false;
     }

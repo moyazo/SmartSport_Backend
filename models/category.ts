@@ -21,7 +21,7 @@ import Subcategory from './subcategory';
 import CategorySubcategory from './categorysubcategory';
 
 @Table({
-    tableName: 'Categories',
+    tableName: 'categories',
 })
 export default class Category extends Model<Category> {
     @PrimaryKey

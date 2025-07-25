@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 import { QueryInterface, DataTypes } from 'sequelize';
 export async function up(queryInterface: QueryInterface) {
-    await queryInterface.createTable('UsersGoals', {
+    await queryInterface.createTable('usersgoals', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -11,7 +11,7 @@ export async function up(queryInterface: QueryInterface) {
         user_id: {
             type: new DataTypes.UUID(),
             references: {
-                model: 'Users',
+                model: 'users',
                 key: 'id',
             },
             allowNull: false,
@@ -21,7 +21,7 @@ export async function up(queryInterface: QueryInterface) {
         goal_id: {
             type: new DataTypes.UUID(),
             references: {
-                model: 'Goals',
+                model: 'goals',
                 key: 'id',
             },
             allowNull: false,
@@ -40,5 +40,5 @@ export async function up(queryInterface: QueryInterface) {
 }
 
 export async function down(queryInterface: QueryInterface) {
-    await queryInterface.dropTable('UsersGoals');
+    await queryInterface.dropTable('usersgoals');
 }

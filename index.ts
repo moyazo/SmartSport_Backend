@@ -3,8 +3,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './models';
-import User from './models/user';
 const users = db.sequelize.models.User;
+
+// Import ensureAuthentication middleware
+import ensureAuthentication from './src/middleware/auth';
+import authRoutes from './src/routes/auth';
 
 const startApp = async () => {
     const app: Express = express();
@@ -17,7 +20,10 @@ const startApp = async () => {
             extended: true,
         })
     );
+    app.use(ensureAuthentication);
+    app.use('/auth', authRoutes);
     try {
+        console.log(await users.findOne({ where: { email: 'test@test.com' } }));
         app.listen(port, () => {
             console.log(`App listening on port ${port}`);
         });

@@ -12,7 +12,7 @@ import Category from './category';
 import Subcategory from './subcategory';
 
 @Table({
-    tableName: 'CategorySubcategories',
+    tableName: 'categorysubcategories',
     timestamps: true,
 })
 export default class CategorySubcategory extends Model<CategorySubcategory> {

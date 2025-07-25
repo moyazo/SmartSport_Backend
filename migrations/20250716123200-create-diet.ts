@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 import { QueryInterface, DataTypes } from 'sequelize';
 export async function up(queryInterface: QueryInterface) {
-    await queryInterface.createTable('Diets', {
+    await queryInterface.createTable('diets', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -18,7 +18,7 @@ export async function up(queryInterface: QueryInterface) {
         category_id: {
             type: new DataTypes.UUID(),
             references: {
-                model: 'Categories',
+                model: 'categories',
                 key: 'id',
             },
             allowNull: false,
@@ -37,5 +37,5 @@ export async function up(queryInterface: QueryInterface) {
 }
 
 export async function down(queryInterface: QueryInterface) {
-    await queryInterface.dropTable('Diets');
+    await queryInterface.dropTable('diets');
 }

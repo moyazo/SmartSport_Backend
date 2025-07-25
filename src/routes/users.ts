@@ -20,11 +20,3 @@ userRouter.put('/{id}', async (request: Request, response: Response) => {
 userRouter.delete('/{id}', async (request: Request, response: Response) => {
     // TODO: DELETE A USER
 });
-
-userRouter.post('/signup', async (request: Request, response: Response) => {
-    // TODO: SIGN UP A USER
-});
-
-userRouter.post('/signin', async (request: Request, response: Response) => {
-    // TODO: LOGIN A USER
-});

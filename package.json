@@ -10,7 +10,7 @@
         "startdb": "docker-compose up",
         "stopdb": "docker compose down",
         "prettier": "prettier --write .",
-        "undo": "yarn sequelize-cli db:migrate:undo:all && "
+        "undo": "yarn sequelize-cli db:migrate:undo:all"
     },
     "dependencies": {
         "bcrypt": "^6.0.0",

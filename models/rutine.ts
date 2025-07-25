@@ -17,7 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import User from './user';
 
 @Table({
-    tableName: 'Rutines',
+    tableName: 'rutines',
 })
 export default class Rutine extends Model<Rutine> {
     @PrimaryKey

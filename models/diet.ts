@@ -20,7 +20,7 @@ import Category from './category'; // Asegúrate de importar correctamente
 import User from './user';
 
 @Table({
-    tableName: 'Diets',
+    tableName: 'diets',
 })
 export default class Diet extends Model<Diet> {
     @PrimaryKey

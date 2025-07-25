@@ -25,7 +25,7 @@ import Goal from './goal';
 import UserGoal from './usergoal';
 
 @Table({
-    tableName: 'Users',
+    tableName: 'users',
 })
 export default class User extends Model<User> {
     @PrimaryKey
@@ -33,42 +33,33 @@ export default class User extends Model<User> {
     @Column(DataType.UUID)
     declare id: string;
 
-    @AllowNull(false)
     @Column(DataType.TEXT)
     name!: string;
 
-    @AllowNull(false)
     @Column(DataType.TEXT)
     email!: string;
 
-    @AllowNull(false)
     @Column(DataType.TEXT)
     password!: string;
 
-    @AllowNull(false)
     @Column(DataType.TEXT)
     username!: string;
 
-    @AllowNull(false)
     @Column(DataType.ENUM('ADMIN', 'NORMAL'))
     role!: string;
 
-    @AllowNull(false)
     @Column(DataType.INTEGER)
     age!: number;
 
     @ForeignKey(() => Training)
-    @AllowNull(false)
     @Column(DataType.UUID)
     training_id!: string;
 
     @ForeignKey(() => Diet)
-    @AllowNull(false)
     @Column(DataType.UUID)
     diet_id!: string;
 
     @ForeignKey(() => Rutine)
-    @AllowNull(false)
     @Column(DataType.UUID)
     rutine_id!: string;
 

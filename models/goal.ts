@@ -19,7 +19,7 @@ import User from './user'; // Asegúrate de importar el modelo
 import UserGoal from './usergoal';
 
 @Table({
-    tableName: 'Goals',
+    tableName: 'goals',
 })
 export default class Goal extends Model<Goal> {
     @PrimaryKey
