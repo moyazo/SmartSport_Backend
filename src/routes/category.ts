@@ -1,12 +1,11 @@
 import { Router, Request, Response } from 'express';
 import {
     createCategory,
-    deleteCategory,
     getAll,
     getById,
     modifyCategory,
-} from '../controllers/categories';
-const categoryRouter = Router();
+    removeCategory,
+} from '../controllers/category';
 
 categoryRouter.get('/', async (request: Request, response: Response) => {
     try {
@@ -24,15 +23,15 @@ categoryRouter.get('/', async (request: Request, response: Response) => {
 });
 
 categoryRouter.get('/:id', async (request: Request, response: Response) => {
-    const { id } = request.params;
     try {
+        const { id } = request.params;
         const category = await getById(id);
         if (!category) {
             return response.status(404).json({ message: 'Category not found' });
         }
         return response.status(200).json(category);
     } catch (error) {
-        console.error('Error fetching category:', error);
+        console.error('Error fetching category by ID:', error);
         return response.status(500).json({ message: 'Internal server error' });
     }
 });
@@ -77,17 +76,17 @@ categoryRouter.put('/:id', async (request: Request, response: Response) => {
 categoryRouter.delete('/:id', async (request: Request, response: Response) => {
     const { id } = request.params;
     try {
-        const deleted = await deleteCategory(id);
-        if (!deleted) {
+        const removed = await removeCategory(id);
+        if (!removed) {
             return response
                 .status(400)
-                .json({ message: 'Failed to delete category' });
+                .json({ message: 'Failed to remove category' });
         }
         return response
             .status(200)
-            .json({ message: 'Category deleted successfully' });
+            .json({ message: 'Category removed successfully' });
     } catch (error) {
-        console.error('Error deleting category:', error);
+        console.error('Error removing category:', error);
         return response.status(500).json({ message: 'Internal server error' });
     }
 });
