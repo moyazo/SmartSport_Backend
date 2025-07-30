@@ -13,7 +13,7 @@ export async function up(queryInterface: QueryInterface) {
         },
         type: {
             allowNull: false,
-            type: DataTypes.ENUM('[Diet, Training]'),
+            type: DataTypes.ENUM('Diet', 'Training'),
         },
         createdAt: {
             allowNull: false,

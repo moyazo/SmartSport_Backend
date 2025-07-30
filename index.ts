@@ -9,6 +9,13 @@ const users = db.sequelize.models.User;
 import ensureAuthentication from './src/middleware/auth';
 import authRoutes from './src/routes/auth';
 import userRoutes from './src/routes/users';
+import categoryRoutes from './src/routes/category';
+import subcategoryRoutes from './src/routes/subcategory';
+import traninigRoutes from './src/routes/training';
+import sceneRoutes from './src/routes/scene';
+import rutineRoutes from './src/routes/rutine';
+import goalRoutes from './src/routes/goal';
+import dietRoutes from './src/routes/diet';
 
 const startApp = async () => {
     const app: Express = express();
@@ -24,6 +31,15 @@ const startApp = async () => {
     app.use(ensureAuthentication);
     app.use('/auth', authRoutes);
     app.use('/users', userRoutes);
+    app.use('/categories', categoryRoutes);
+    app.use('/subcategories', subcategoryRoutes);
+    app.use('/training', traninigRoutes);
+    app.use('/scene', sceneRoutes);
+    app.use('/rutine', rutineRoutes);
+    app.use('/goal', goalRoutes);
+    app.use('/diet', dietRoutes);
+    app.use(cors());
+
     try {
         console.log(users.model);
         app.listen(port, () => {
