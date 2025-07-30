@@ -8,7 +8,6 @@ export async function up(queryInterface: QueryInterface) {
             primaryKey: true,
         },
         name: {
-            allowNull: false,
             type: DataTypes.TEXT,
         },
         type: {

@@ -6,7 +6,6 @@ import {
     modifyCategory,
     removeCategory,
 } from '../controllers/category';
-const categoryRouter = Router();
 
 categoryRouter.get('/', async (request: Request, response: Response) => {
     try {

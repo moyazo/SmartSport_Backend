@@ -39,7 +39,6 @@ const startApp = async () => {
     app.use('/goal', goalRoutes);
     app.use('/diet', dietRoutes);
     app.use(cors());
-
     try {
         console.log(users.model);
         app.listen(port, () => {
