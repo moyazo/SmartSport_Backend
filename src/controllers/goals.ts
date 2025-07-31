@@ -25,7 +25,7 @@ export const getById = async (id: string): Promise<typeof goal | null> => {
 export const createGoal = async (
     body: InferCreationAttributes<typeof goal>
 ): Promise<boolean> => {
-if (!body) {
+    if (!body) {
         return false;
     }
 

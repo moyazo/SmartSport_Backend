@@ -28,12 +28,10 @@ export const createTraining = async (
     if (!body) {
         return false;
     }
-    body.forEach((trainingData: any) => {
-        if (!trainingData) {
-            return false;
-        }
-    });
-    const created = await training.create({ body });
+
+    const dataToCreate = { ...body };
+
+    const created = await training.create(dataToCreate);
     if (!created) {
         return false;
     }
