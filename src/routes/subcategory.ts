@@ -28,7 +28,9 @@ subcategoryRouter.get('/:id', async (request: Request, response: Response) => {
         const { id } = request.params;
         const category = await getById(id);
         if (!category) {
-            return response.status(404).json({ message: 'Subcategory not found' });
+            return response
+                .status(404)
+                .json({ message: 'Subcategory not found' });
         }
         return response.status(200).json(category);
     } catch (error) {

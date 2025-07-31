@@ -49,7 +49,37 @@ export default class User extends Model<User> {
     role!: string;
 
     @Column(DataType.INTEGER)
+    height!: number;
+
+    @Column(DataType.INTEGER)
+    weight!: number;
+
+    @Column(DataType.ENUM('Male', 'Woman', 'Other'))
+    sex!: string;
+
+    @Column(DataType.INTEGER)
     age!: number;
+
+    @Column(DataType.INTEGER)
+    imc!: number;
+
+    @Column(DataType.INTEGER)
+    tmb!: number;
+
+    @Column(DataType.INTEGER)
+    tdee!: number;
+
+    @Column(DataType.INTEGER)
+    fat!: number;
+
+    @Column(DataType.INTEGER)
+    muscle!: number;
+
+    @Column(DataType.INTEGER)
+    bony!: number;
+
+    @Column(DataType.ENUM('1', '2', '3', '4', '5'))
+    fitnessStyle!: string;
 
     @ForeignKey(() => Training)
     @Column(DataType.UUID)

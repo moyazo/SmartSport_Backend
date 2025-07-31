@@ -25,6 +25,7 @@ export const getById = async (id: string): Promise<typeof scene | null> => {
 export const createScene = async (
     body: InferCreationAttributes<typeof scene>
 ): Promise<boolean> => {
+    // TODO:  SE for use IA and consulte GOALs
     if (!body) {
         return false;
     }
@@ -43,6 +44,7 @@ export const modifyScene = async (
     id: string,
     body: InferCreationAttributes<typeof scene>
 ): Promise<boolean> => {
+    // TODO:  SE for use IA and consulte GOALs
     if (!body || !id) {
         return false;
     }

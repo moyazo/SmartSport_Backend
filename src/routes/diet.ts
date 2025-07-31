@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { getAll } from '../controllers/users';
+import { getAll } from '../controllers/diet';
 import {
     createDiet,
     getById,
