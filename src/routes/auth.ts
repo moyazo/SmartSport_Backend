@@ -11,6 +11,11 @@ authRouter.post('/signup', async (request: Request, response: Response) => {
     if (result === false) {
         return response.status(400).json({ message: 'User creation failed' });
     }
+    response.cookie('token', result, {
+        httpOnly: true,
+        secure: false, // Set to true if using HTTPS
+        sameSite: 'strict',
+    });
     return response
         .status(201)
         .json({ message: 'User created successfully', token: result });
