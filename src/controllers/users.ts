@@ -183,7 +183,7 @@ export const toggleFollowRutine = async (
     if (!id || !rutine_id) {
         return {
             updated: false,
-            toggle: "error"
+            toggle: 'error',
         };
     }
 
@@ -191,7 +191,7 @@ export const toggleFollowRutine = async (
     if (!userToModify) {
         return {
             updated: false,
-            toggle: "error"
+            toggle: 'error',
         };
     }
 
@@ -199,7 +199,7 @@ export const toggleFollowRutine = async (
     if (!rutineExists) {
         return {
             updated: false,
-            toggle: "error"
+            toggle: 'error',
         };
     }
 
@@ -210,20 +210,16 @@ export const toggleFollowRutine = async (
         );
         return {
             updated: !!updated,
-            toggle: "unfollowed"
+            toggle: 'unfollowed',
         };
     } else {
-        const updated = await user.update(
-            { rutine_id },
-            { where: { id } }
-        );
+        const updated = await user.update({ rutine_id }, { where: { id } });
         return {
             updated: !!updated,
-            toggle: "followed"
+            toggle: 'followed',
         };
     }
 };
-
 
 export const toggleFollowDiet = async (
     id: string,
@@ -232,7 +228,7 @@ export const toggleFollowDiet = async (
     if (!id || !diet_id) {
         return {
             updated: false,
-            toggle: "error"
+            toggle: 'error',
         };
     }
 
@@ -240,7 +236,7 @@ export const toggleFollowDiet = async (
     if (!userToModify) {
         return {
             updated: false,
-            toggle: "error"
+            toggle: 'error',
         };
     }
 
@@ -248,31 +244,24 @@ export const toggleFollowDiet = async (
     if (!dietExists) {
         return {
             updated: false,
-            toggle: "error"
+            toggle: 'error',
         };
     }
 
     if (userToModify.diet_id === diet_id) {
-        const updated = await user.update(
-            { diet_id: null },
-            { where: { id } }
-        );
+        const updated = await user.update({ diet_id: null }, { where: { id } });
         return {
             updated: !!updated,
-            toggle: "unfollowed"
+            toggle: 'unfollowed',
         };
     } else {
-        const updated = await user.update(
-            { diet_id },
-            { where: { id } }
-        );
+        const updated = await user.update({ diet_id }, { where: { id } });
         return {
             updated: !!updated,
-            toggle: "followed"
+            toggle: 'followed',
         };
     }
 };
-
 
 export const toggleStartTraining = async (
     id: string,
@@ -280,23 +269,23 @@ export const toggleStartTraining = async (
 ): Promise<TogglesType> => {
     let ToggleReturn: TogglesType = {
         updated: false,
-        toggle: ""
+        toggle: '',
     };
     if (!id || !training_id) {
-        ToggleReturn.toggle = "error";
-        return ToggleReturn
+        ToggleReturn.toggle = 'error';
+        return ToggleReturn;
     }
 
     const userToModify = await user.findOne({ where: { id } });
     if (!userToModify) {
-        ToggleReturn.toggle = "error";
-        return ToggleReturn
+        ToggleReturn.toggle = 'error';
+        return ToggleReturn;
     }
 
     const trainingExists = await getTrainingById(training_id);
     if (!trainingExists) {
-        ToggleReturn.toggle = "error";
-        return ToggleReturn
+        ToggleReturn.toggle = 'error';
+        return ToggleReturn;
     }
 
     // Si ya está en un entrenamiento, lo termina (quitamos training_id)
@@ -306,12 +295,12 @@ export const toggleStartTraining = async (
             { where: { id } }
         );
         ToggleReturn.updated = !!updated;
-        ToggleReturn.toggle = "stopped";
+        ToggleReturn.toggle = 'stopped';
         return ToggleReturn;
     } else {
         const updated = await user.update({ training_id }, { where: { id } });
         ToggleReturn.updated = !!updated;
-        ToggleReturn.toggle = "started";
+        ToggleReturn.toggle = 'started';
         return ToggleReturn;
     }
 };
