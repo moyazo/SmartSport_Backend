@@ -20,10 +20,40 @@ export async function up(queryInterface: QueryInterface) {
             type: new DataTypes.TEXT(),
         },
         role: {
-            type: new DataTypes.ENUM("['ADMIN','NORMAL']"),
+            type: new DataTypes.ENUM('ADMIN', 'NORMAL'),
         },
         age: {
             type: new DataTypes.INTEGER(),
+        },
+        height: {
+            type: new DataTypes.INTEGER(),
+        },
+        weight: {
+            type: new DataTypes.INTEGER(),
+        },
+        imc: {
+            type: new DataTypes.INTEGER(),
+        },
+        tmb: {
+            type: new DataTypes.INTEGER(),
+        },
+        tdee: {
+            type: new DataTypes.INTEGER(),
+        },
+        fat: {
+            type: new DataTypes.INTEGER(),
+        },
+        muscle: {
+            type: new DataTypes.INTEGER(),
+        },
+        bony: {
+            type: new DataTypes.INTEGER(),
+        },
+        fitnessStyle: {
+            type: new DataTypes.ENUM('1', '2', '3', '4', '5'),
+        },
+        sex: {
+            type: new DataTypes.ENUM('Male', 'Woman', 'Other'),
         },
         training_id: {
             type: new DataTypes.UUID(),
