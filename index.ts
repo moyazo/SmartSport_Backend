@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './models';
@@ -23,6 +24,7 @@ const startApp = async () => {
     const port: string = process.env.port || '8000';
 
     app.use(bodyParser.json());
+    app.use(cookieParser());
     app.use(
         bodyParser.urlencoded({
             extended: true,
@@ -38,7 +40,10 @@ const startApp = async () => {
     app.use('/rutine', rutineRoutes);
     app.use('/goal', goalRoutes);
     app.use('/diet', dietRoutes);
-    app.use(cors());
+    app.use(cors({
+         origin: 'http://localhost:3000', // tu frontend
+        credentials: true
+    }));
     try {
         console.log(users.model);
         app.listen(port, () => {

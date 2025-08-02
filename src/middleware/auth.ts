@@ -16,15 +16,14 @@ const ensureAuthentication = async (
 ) => {
     if (req.path.includes('/auth')) return next();
 
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const token = req.cookies?.token;
+
+    if (!token) {
         return res.status(403).json('You are not authenticated');
     }
 
-    const token = authHeader.split(' ')[1];
-
     try {
-        const payload = jwt.decode(token) as JwtPayload;
+        const payload = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
 
         if (!payload.email) {
             console.error('Invalid token payload:', payload);

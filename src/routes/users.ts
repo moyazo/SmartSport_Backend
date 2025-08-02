@@ -164,22 +164,22 @@ userRouter.post(
         try {
             const follow = await toggleFollowRutine(id, rutine_id);
             if (!follow.updated) {
-                    return response.status(400).json({
-                        message: 'Failed to toggle rutine follow status',
-                    });
-                }
-                if(follow.toggle === "unfollowed") {
-                    return response.status(200).json({
-                        message: 'Rutine unfollowed successfully',
-                    });
-                } else if(follow.toggle === "followed") {
-                    return response.status(200).json({
-                        message: 'Rutine followed successfully',
-                    });
-                } else {
-                    return response.status(400).json({
-                        message: 'Unexpected toggle state',
-                    });
+                return response.status(400).json({
+                    message: 'Failed to toggle rutine follow status',
+                });
+            }
+            if (follow.toggle === 'unfollowed') {
+                return response.status(200).json({
+                    message: 'Rutine unfollowed successfully',
+                });
+            } else if (follow.toggle === 'followed') {
+                return response.status(200).json({
+                    message: 'Rutine followed successfully',
+                });
+            } else {
+                return response.status(400).json({
+                    message: 'Unexpected toggle state',
+                });
             }
         } catch (error) {
             console.error('Error following routine:', error);
@@ -203,24 +203,24 @@ userRouter.post(
         try {
             const follow = await toggleFollowDiet(id, diet_id);
             if (!follow.updated) {
-                    return response.status(400).json({
-                        message: 'Failed to toggle diet follow status',
-                    });
-                }
-                
-                if(follow.toggle === "unfollowed") {
-                    return response.status(200).json({
-                        message: 'Diet unfollowed successfully',
-                    });
-                } else if(follow.toggle === "followed") {
-                    return response.status(200).json({
-                        message: 'Diet followed successfully',
-                    });
-                } else {
-                    return response.status(400).json({
-                        message: 'Unexpected toggle state',
-                    });
-                }
+                return response.status(400).json({
+                    message: 'Failed to toggle diet follow status',
+                });
+            }
+
+            if (follow.toggle === 'unfollowed') {
+                return response.status(200).json({
+                    message: 'Diet unfollowed successfully',
+                });
+            } else if (follow.toggle === 'followed') {
+                return response.status(200).json({
+                    message: 'Diet followed successfully',
+                });
+            } else {
+                return response.status(400).json({
+                    message: 'Unexpected toggle state',
+                });
+            }
         } catch (error) {
             console.error('Error following diet:', error);
             return response
@@ -247,12 +247,12 @@ userRouter.post(
                     message: 'Failed to start training',
                 });
             }
-            
-            if(started.toggle === "stopped") {
+
+            if (started.toggle === 'stopped') {
                 return response.status(200).json({
                     message: 'Training stopped successfully',
                 });
-            } else if(started.toggle === "started") {
+            } else if (started.toggle === 'started') {
                 return response.status(200).json({
                     message: 'Training started successfully',
                 });

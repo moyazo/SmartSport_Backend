@@ -1,27 +1,28 @@
 import db from '../../models';
 import { getByEmail } from './users';
 import jsonwebtoken from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 const user = db.sequelize.models.User;
 
-export const signup = async (body: {
-    email: string;
-    password: string;
-}): Promise<string | boolean> => {
-    if (!body || !body.email || !body.password) {
-        return false;
-    }
+export const signup = async (body: { email: string; password: string }) => {
+    if (!body.email || !body.password) return false;
+
     const existedEmail = await getByEmail(body.email);
-    if (existedEmail) {
-        return false;
-    }
-    const created = await user.create(body);
-    if (!created) {
-        return false;
-    }
+    if (existedEmail) return false;
+
+    const hashedPassword = await bcrypt.hash(body.password, 10);
+    const created = await user.create({
+        email: body.email,
+        password: hashedPassword,
+    });
+    if (!created) return false;
 
     return jsonwebtoken.sign(
         { email: created.email },
-        process.env.TOKEN_SECRET || 'default_secret'
+        process.env.TOKEN_SECRET || 'default_secret',
+        {
+            expiresIn: '1h',
+        }
     );
 };
 
