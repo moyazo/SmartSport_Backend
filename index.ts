@@ -22,7 +22,12 @@ const startApp = async () => {
     const app: Express = express();
     dotenv.config();
     const port: string = process.env.port || '8000';
-
+    app.use(
+        cors({
+            origin: 'http://localhost:3000', // tu frontend
+            credentials: true,
+        })
+    );
     app.use(bodyParser.json());
     app.use(cookieParser());
     app.use(
@@ -40,10 +45,6 @@ const startApp = async () => {
     app.use('/rutine', rutineRoutes);
     app.use('/goal', goalRoutes);
     app.use('/diet', dietRoutes);
-    app.use(cors({
-         origin: 'http://localhost:3000', // tu frontend
-        credentials: true
-    }));
     try {
         console.log(users.model);
         app.listen(port, () => {
