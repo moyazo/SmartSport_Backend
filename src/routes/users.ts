@@ -1,5 +1,20 @@
 import { Router, Request, Response } from 'express';
 import {
+    BAD_REQUEST,
+    CREATED,
+    FAIL_TO_CREATE,
+    OK,
+    SUCCESS_TO_CREATE,
+    NOT_FOUND_MESSAGE,
+    INTERNAL_SERVER_ERROR,
+    INTERNAL_SERVER_ERROR_MESSAGE,
+    FAIL_TO_MODIFY,
+    SUCCESS_TO_MODIFY,
+    FAIL_TO_REMOVE,
+    SUCCESS_TO_REMOVE,
+    INVALID_REQUEST_BODY,
+} from '../common/constants';
+import {
     configData,
     createUser,
     toggleFollowDiet,
@@ -16,12 +31,16 @@ userRouter.get('/', async (request: Request, response: Response) => {
     try {
         const users = await getAll();
         if (!users) {
-            return response.status(404).json({ message: 'No users found' });
+            return response
+                .status(BAD_REQUEST)
+                .json({ message: NOT_FOUND_MESSAGE });
         }
-        return response.status(200).json(users);
+        return response.status(OK).json(users);
     } catch (error) {
         console.error('Error fetching users:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -30,12 +49,16 @@ userRouter.get('/:id', async (request: Request, response: Response) => {
     try {
         const user = await getById(id);
         if (!user) {
-            return response.status(404).json({ message: 'User not found' });
+            return response
+                .status(BAD_REQUEST)
+                .json({ message: NOT_FOUND_MESSAGE });
         }
-        return response.status(200).json(user);
+        return response.status(OK).json(user);
     } catch (error) {
         console.error('Error fetching user:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -45,15 +68,15 @@ userRouter.post('/', async (request: Request, response: Response) => {
         const created = await createUser(body);
         if (!created) {
             return response
-                .status(400)
-                .json({ message: 'Failed to create user' });
+                .status(BAD_REQUEST)
+                .json({ message: FAIL_TO_CREATE });
         }
-        return response
-            .status(201)
-            .json({ message: 'User created successfully' });
+        return response.status(CREATED).json({ message: SUCCESS_TO_CREATE });
     } catch (error) {
         console.error('Error creating user:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -64,15 +87,15 @@ userRouter.put('/:id', async (request: Request, response: Response) => {
         const modified = await modifyUser(id, body);
         if (!modified) {
             return response
-                .status(400)
-                .json({ message: 'Failed to modify user' });
+                .status(BAD_REQUEST)
+                .json({ message: FAIL_TO_MODIFY });
         }
-        return response
-            .status(200)
-            .json({ message: 'User modified successfully' });
+        return response.status(OK).json({ message: SUCCESS_TO_MODIFY });
     } catch (error) {
         console.error('Error modifying user:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -82,15 +105,15 @@ userRouter.delete('/:id', async (request: Request, response: Response) => {
         const deleted = await removeUser(id);
         if (!deleted) {
             return response
-                .status(400)
-                .json({ message: 'Failed to delete user' });
+                .status(BAD_REQUEST)
+                .json({ message: FAIL_TO_REMOVE });
         }
-        return response
-            .status(200)
-            .json({ message: 'User deleted successfully' });
+        return response.status(OK).json({ message: SUCCESS_TO_REMOVE });
     } catch (error) {
         console.error('Error deleting user:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -100,25 +123,25 @@ userRouter.post(
         const body = request.body;
         const { id } = request.params;
         if (!id || !body) {
-            return response.status(400).json({
+            return response.status(BAD_REQUEST).json({
                 message: 'User ID and configuration data are required',
             });
         }
         try {
             const config = await configData(id, body);
             if (!config) {
-                return response.status(400).json({
-                    message: 'Failed to create user configuration data',
+                return response.status(BAD_REQUEST).json({
+                    message: INVALID_REQUEST_BODY,
                 });
             }
             return response.status(201).json({
-                message: 'User configuration data created successfully',
+                message: SUCCESS_TO_CREATE,
             });
         } catch (error) {
             console.error('Error creating user configuration data:', error);
             return response
-                .status(500)
-                .json({ message: 'Internal server error' });
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 );
@@ -128,25 +151,25 @@ userRouter.put(
     async (request: Request, response: Response) => {
         const { id } = request.params;
         if (!id) {
-            return response.status(400).json({
-                message: 'User ID is required',
+            return response.status(BAD_REQUEST).json({
+                message: INVALID_REQUEST_BODY,
             });
         }
         try {
             const reset = await configData(id, null);
             if (!reset) {
-                return response.status(400).json({
-                    message: 'Failed to reset user configuration data',
+                return response.status(BAD_REQUEST).json({
+                    message: FAIL_TO_MODIFY,
                 });
             }
-            return response.status(200).json({
-                message: 'User configuration data reset successfully',
+            return response.status(OK).json({
+                message: SUCCESS_TO_MODIFY,
             });
         } catch (error) {
             console.error('Error resetting user configuration data:', error);
             return response
-                .status(500)
-                .json({ message: 'Internal server error' });
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 );
@@ -157,35 +180,35 @@ userRouter.post(
         const { id } = request.params;
         const { rutine_id } = request.body;
         if (!id || !rutine_id) {
-            return response.status(400).json({
-                message: 'User ID and routine data are required',
+            return response.status(BAD_REQUEST).json({
+                message: INVALID_REQUEST_BODY,
             });
         }
         try {
             const follow = await toggleFollowRutine(id, rutine_id);
             if (!follow.updated) {
-                return response.status(400).json({
-                    message: 'Failed to toggle rutine follow status',
+                return response.status(BAD_REQUEST).json({
+                    message: FAIL_TO_MODIFY,
                 });
             }
             if (follow.toggle === 'unfollowed') {
-                return response.status(200).json({
+                return response.status(OK).json({
                     message: 'Rutine unfollowed successfully',
                 });
             } else if (follow.toggle === 'followed') {
-                return response.status(200).json({
+                return response.status(OK).json({
                     message: 'Rutine followed successfully',
                 });
             } else {
-                return response.status(400).json({
-                    message: 'Unexpected toggle state',
+                return response.status(BAD_REQUEST).json({
+                    message: FAIL_TO_MODIFY,
                 });
             }
         } catch (error) {
             console.error('Error following routine:', error);
             return response
-                .status(500)
-                .json({ message: 'Internal server error' });
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 );
@@ -196,36 +219,36 @@ userRouter.post(
         const { id } = request.params;
         const { diet_id } = request.body;
         if (!id || !diet_id) {
-            return response.status(400).json({
-                message: 'User ID and diet data are required',
+            return response.status(BAD_REQUEST).json({
+                message: INVALID_REQUEST_BODY,
             });
         }
         try {
             const follow = await toggleFollowDiet(id, diet_id);
             if (!follow.updated) {
-                return response.status(400).json({
-                    message: 'Failed to toggle diet follow status',
+                return response.status(BAD_REQUEST).json({
+                    message: FAIL_TO_MODIFY,
                 });
             }
 
             if (follow.toggle === 'unfollowed') {
-                return response.status(200).json({
+                return response.status(OK).json({
                     message: 'Diet unfollowed successfully',
                 });
             } else if (follow.toggle === 'followed') {
-                return response.status(200).json({
+                return response.status(OK).json({
                     message: 'Diet followed successfully',
                 });
             } else {
-                return response.status(400).json({
-                    message: 'Unexpected toggle state',
+                return response.status(BAD_REQUEST).json({
+                    message: FAIL_TO_MODIFY,
                 });
             }
         } catch (error) {
             console.error('Error following diet:', error);
             return response
-                .status(500)
-                .json({ message: 'Internal server error' });
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 );
@@ -236,36 +259,36 @@ userRouter.post(
         const { id } = request.params;
         const { training_id } = request.body;
         if (!id || !training_id) {
-            return response.status(400).json({
+            return response.status(BAD_REQUEST).json({
                 message: 'User ID and training data are required',
             });
         }
         try {
             const started = await toggleStartTraining(id, training_id);
             if (!started.updated) {
-                return response.status(400).json({
+                return response.status(BAD_REQUEST).json({
                     message: 'Failed to start training',
                 });
             }
 
             if (started.toggle === 'stopped') {
-                return response.status(200).json({
+                return response.status(OK).json({
                     message: 'Training stopped successfully',
                 });
             } else if (started.toggle === 'started') {
-                return response.status(200).json({
+                return response.status(OK).json({
                     message: 'Training started successfully',
                 });
             } else {
-                return response.status(400).json({
+                return response.status(BAD_REQUEST).json({
                     message: 'Unexpected toggle state',
                 });
             }
         } catch (error) {
             console.error('Error starting training:', error);
             return response
-                .status(500)
-                .json({ message: 'Internal server error' });
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 );

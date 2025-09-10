@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import 'reflect-metadata';
-import { Sequelize } from 'sequelize-typescript';
+import { Model, Sequelize, ModelCtor } from 'sequelize-typescript';
 import { configDB } from '../config/config';
 
 const basename = path.basename(__filename);
@@ -9,7 +9,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = configDB[env];
 
 // Crear lista de modelos válidos
-const models: any[] = [];
+const models: Array<ModelCtor<Model>> = [];
 
 fs.readdirSync(__dirname)
     .filter((file) => {
@@ -37,8 +37,8 @@ const sequelize = new Sequelize({
     host: config.host,
     port: Number(config.port),
     dialect: 'postgres',
-    models, // array con todas las clases de modelo
-    logging: false, // desactiva logs SQL en consola
+    models,
+    logging: false,
 });
 
 const db: { [key: string]: any } = {
@@ -46,7 +46,6 @@ const db: { [key: string]: any } = {
     Sequelize,
 };
 
-// Agregamos cada modelo como propiedad de `db`
 models.forEach((modelClass) => {
     db[modelClass.name] = modelClass;
 });

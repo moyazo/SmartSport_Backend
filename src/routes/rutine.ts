@@ -1,5 +1,19 @@
 import { Router, Request, Response } from 'express';
 import {
+    BAD_REQUEST,
+    CREATED,
+    FAIL_TO_CREATE,
+    OK,
+    SUCCESS_TO_CREATE,
+    NOT_FOUND_MESSAGE,
+    INTERNAL_SERVER_ERROR,
+    INTERNAL_SERVER_ERROR_MESSAGE,
+    FAIL_TO_MODIFY,
+    SUCCESS_TO_MODIFY,
+    FAIL_TO_REMOVE,
+    SUCCESS_TO_REMOVE,
+} from '../common/constants';
+import {
     createRutine,
     getAll,
     getById,
@@ -12,12 +26,16 @@ rutineRouter.get('/', async (request: Request, response: Response) => {
     try {
         const routines = await getAll();
         if (!routines) {
-            return response.status(404).json({ error: 'No routines found' });
+            return response
+                .status(BAD_REQUEST)
+                .json({ error: NOT_FOUND_MESSAGE });
         }
-        response.status(200).json(routines);
+        response.status(OK).json(routines);
     } catch (error) {
         console.error('Error fetching routines:', error);
-        response.status(500).json({ error: 'Internal Server Error' });
+        response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -26,12 +44,16 @@ rutineRouter.get('/:id', async (request: Request, response: Response) => {
         const { id } = request.params;
         const routine = await getById(id);
         if (!routine) {
-            return response.status(404).json({ error: 'Routine not found' });
+            return response
+                .status(BAD_REQUEST)
+                .json({ error: NOT_FOUND_MESSAGE });
         }
-        response.status(200).json(routine);
+        response.status(OK).json(routine);
     } catch (error) {
         console.error('Error fetching routine:', error);
-        response.status(500).json({ error: 'Internal Server Error' });
+        response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -40,14 +62,14 @@ rutineRouter.post('/', async (request: Request, response: Response) => {
         const body = request.body;
         const created = await createRutine(body);
         if (!created) {
-            return response
-                .status(400)
-                .json({ error: 'Failed to create routine' });
+            return response.status(BAD_REQUEST).json({ error: FAIL_TO_CREATE });
         }
-        response.status(201).json({ message: 'Routine created successfully' });
+        response.status(CREATED).json({ message: SUCCESS_TO_CREATE });
     } catch (error) {
         console.error('Error creating routine:', error);
-        response.status(500).json({ error: 'Internal Server Error' });
+        response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -57,14 +79,14 @@ rutineRouter.put('/:id', async (request: Request, response: Response) => {
         const body = request.body;
         const modified = await modifyRutine(id, body);
         if (!modified) {
-            return response
-                .status(400)
-                .json({ error: 'Failed to modify routine' });
+            return response.status(BAD_REQUEST).json({ error: FAIL_TO_MODIFY });
         }
-        response.status(200).json({ message: 'Routine modified successfully' });
+        response.status(OK).json({ message: SUCCESS_TO_MODIFY });
     } catch (error) {
         console.error('Error modifying routine:', error);
-        response.status(500).json({ error: 'Internal Server Error' });
+        response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -73,14 +95,14 @@ rutineRouter.delete('/:id', async (request: Request, response: Response) => {
         const { id } = request.params;
         const removed = await removeRutine(id);
         if (!removed) {
-            return response
-                .status(400)
-                .json({ error: 'Failed to remove routine' });
+            return response.status(BAD_REQUEST).json({ error: FAIL_TO_REMOVE });
         }
-        response.status(200).json({ message: 'Routine removed successfully' });
+        response.status(OK).json({ message: SUCCESS_TO_REMOVE });
     } catch (error) {
         console.error('Error removing routine:', error);
-        response.status(500).json({ error: 'Internal Server Error' });
+        response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 

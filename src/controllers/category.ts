@@ -28,7 +28,6 @@ export const getByType = async (
     if (!type) {
         return null;
     }
-    console.log(type);
     const categoryFound = await category.findOne({ where: { type } });
     if (!categoryFound) {
         return null;

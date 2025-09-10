@@ -1,5 +1,19 @@
 import { Router, Request, Response } from 'express';
 import {
+    BAD_REQUEST,
+    CREATED,
+    FAIL_TO_CREATE,
+    OK,
+    SUCCESS_TO_CREATE,
+    NOT_FOUND_MESSAGE,
+    INTERNAL_SERVER_ERROR,
+    INTERNAL_SERVER_ERROR_MESSAGE,
+    FAIL_TO_MODIFY,
+    SUCCESS_TO_MODIFY,
+    FAIL_TO_REMOVE,
+    SUCCESS_TO_REMOVE,
+} from '../common/constants';
+import {
     createSubcategory,
     getAll,
     getById,
@@ -13,13 +27,15 @@ subcategoryRouter.get('/', async (request: Request, response: Response) => {
         const categories = await getAll();
         if (!categories) {
             return response
-                .status(404)
-                .json({ message: 'No Subcategories found' });
+                .status(BAD_REQUEST)
+                .json({ message: NOT_FOUND_MESSAGE });
         }
-        return response.status(200).json(categories);
+        return response.status(OK).json(categories);
     } catch (error) {
         console.error('Error fetching categories:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -29,13 +45,15 @@ subcategoryRouter.get('/:id', async (request: Request, response: Response) => {
         const category = await getById(id);
         if (!category) {
             return response
-                .status(404)
-                .json({ message: 'Subcategory not found' });
+                .status(BAD_REQUEST)
+                .json({ message: NOT_FOUND_MESSAGE });
         }
-        return response.status(200).json(category);
+        return response.status(OK).json(category);
     } catch (error) {
         console.error('Error fetching Subcategory by ID:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -45,15 +63,15 @@ subcategoryRouter.post('/', async (request: Request, response: Response) => {
         const created = await createSubcategory(body);
         if (!created) {
             return response
-                .status(400)
-                .json({ message: 'Failed to create Subcategory' });
+                .status(BAD_REQUEST)
+                .json({ message: FAIL_TO_CREATE });
         }
-        return response
-            .status(201)
-            .json({ message: 'Subcategory created successfully' });
+        return response.status(CREATED).json({ message: SUCCESS_TO_CREATE });
     } catch (error) {
         console.error('Error creating category:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -64,15 +82,15 @@ subcategoryRouter.put('/:id', async (request: Request, response: Response) => {
         const modified = await modifySubcategory(id, body);
         if (!modified) {
             return response
-                .status(400)
-                .json({ message: 'Failed to modify Subcategory' });
+                .status(BAD_REQUEST)
+                .json({ message: FAIL_TO_MODIFY });
         }
-        return response
-            .status(200)
-            .json({ message: 'Subcategory modified successfully' });
+        return response.status(OK).json({ message: SUCCESS_TO_MODIFY });
     } catch (error) {
         console.error('Error modifying Subcategory:', error);
-        return response.status(500).json({ message: 'Internal server error' });
+        return response
+            .status(INTERNAL_SERVER_ERROR)
+            .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
     }
 });
 
@@ -84,17 +102,15 @@ subcategoryRouter.delete(
             const removed = await removeSubcategory(id);
             if (!removed) {
                 return response
-                    .status(400)
-                    .json({ message: 'Failed to remove Subcategory' });
+                    .status(BAD_REQUEST)
+                    .json({ message: FAIL_TO_REMOVE });
             }
-            return response
-                .status(200)
-                .json({ message: 'Subcategory removed successfully' });
+            return response.status(OK).json({ message: SUCCESS_TO_REMOVE });
         } catch (error) {
             console.error('Error removing Subcategory:', error);
             return response
-                .status(500)
-                .json({ message: 'Internal server error' });
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ message: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 );
