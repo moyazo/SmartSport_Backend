@@ -1,15 +1,27 @@
 import { Router, Request, Response } from 'express';
 import { login, signup } from '../controllers/auth';
+import {
+    BAD_REQUEST,
+    CREATED,
+    FAIL_TO_CREATE,
+    INVALID_REQUEST_BODY,
+    LOGIN_SUCCESS,
+    OK,
+    SUCCESS_TO_CREATE,
+    UNAUTHORIZED,
+} from '../common/constants';
 const authRouter = Router();
 
 authRouter.post('/signup', async (request: Request, response: Response) => {
     const body = request.body;
     if (!body || !body.email || !body.password) {
-        return response.status(400).json({ message: 'Invalid request body' });
+        return response
+            .status(BAD_REQUEST)
+            .json({ message: INVALID_REQUEST_BODY });
     }
     const result = await signup(body);
     if (result === false) {
-        return response.status(400).json({ message: 'User creation failed' });
+        return response.status(BAD_REQUEST).json({ message: FAIL_TO_CREATE });
     }
     response.cookie('token', result, {
         httpOnly: true,
@@ -17,26 +29,24 @@ authRouter.post('/signup', async (request: Request, response: Response) => {
         sameSite: 'strict',
     });
     return response
-        .status(201)
-        .json({ message: 'User created successfully', token: result });
+        .status(CREATED)
+        .json({ message: SUCCESS_TO_CREATE, token: result });
 });
 
 authRouter.post('/signin', async (request: Request, response: Response) => {
     const { email, password } = request.body;
     if (!email || !password) {
         return response
-            .status(400)
-            .json({ message: 'Email and password are required' });
+            .status(BAD_REQUEST)
+            .json({ message: INVALID_REQUEST_BODY });
     }
     const user = await login(email, password);
     if (!user) {
         return response
-            .status(401)
+            .status(UNAUTHORIZED)
             .json({ message: 'Invalid email or password' });
     }
-    return response
-        .status(200)
-        .json({ message: 'Login successful', token: user });
+    return response.status(OK).json({ message: LOGIN_SUCCESS, token: user });
 });
 
 export default authRouter;

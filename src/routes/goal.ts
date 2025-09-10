@@ -1,5 +1,19 @@
 import { Router, Request, Response } from 'express';
 import {
+    BAD_REQUEST,
+    CREATED,
+    FAIL_TO_CREATE,
+    OK,
+    SUCCESS_TO_CREATE,
+    NOT_FOUND_MESSAGE,
+    INTERNAL_SERVER_ERROR,
+    INTERNAL_SERVER_ERROR_MESSAGE,
+    FAIL_TO_MODIFY,
+    SUCCESS_TO_MODIFY,
+    FAIL_TO_REMOVE,
+    SUCCESS_TO_REMOVE,
+} from '../common/constants';
+import {
     createGoal,
     getAll,
     getById,
@@ -12,16 +26,22 @@ goalRouter.get('/', async (request: Request, response: Response) => {
     try {
         const goals = await getAll(); // Assuming getAllGoals is a function that fetches all goals
         if (!goals) {
-            return response.status(404).json({ error: 'No goals found' });
+            return response
+                .status(BAD_REQUEST)
+                .json({ error: NOT_FOUND_MESSAGE });
         }
-        response.status(200).json(goals);
+        response.status(OK).json(goals);
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error('Error fetching goals:', error.message);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         } else {
             console.error('Unknown error fetching goals:', error);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 });
@@ -31,16 +51,22 @@ goalRouter.get('/:id', async (request: Request, response: Response) => {
         const goalId = request.params.id;
         const goal = await getById(goalId); // Assuming getById is a function that fetches a goal by ID
         if (!goal) {
-            return response.status(404).json({ error: 'Goal not found' });
+            return response
+                .status(BAD_REQUEST)
+                .json({ error: NOT_FOUND_MESSAGE });
         }
-        response.status(200).json(goal);
+        response.status(OK).json(goal);
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error('Error fetching goal:', error.message);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         } else {
             console.error('Unknown error fetching goal:', error);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 });
@@ -50,18 +76,20 @@ goalRouter.post('/', async (request: Request, response: Response) => {
         const body = request.body; // Assuming body contains the goal data
         const created = await createGoal(body); // Assuming createGoal is a function that creates a new goal
         if (!created) {
-            return response
-                .status(400)
-                .json({ error: 'Failed to create goal' });
+            return response.status(BAD_REQUEST).json({ error: FAIL_TO_CREATE });
         }
-        response.status(201).json({ message: 'Goal created successfully' });
+        response.status(CREATED).json({ message: SUCCESS_TO_CREATE });
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error('Error creating goal:', error.message);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         } else {
             console.error('Unknown error creating goal:', error);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 });
@@ -72,18 +100,20 @@ goalRouter.put('/:id', async (request: Request, response: Response) => {
         const body = request.body; // Assuming body contains the updated goal data
         const modified = await modifyGoal(goalId, body); // Assuming modifyGoal is a function that modifies a goal
         if (!modified) {
-            return response
-                .status(400)
-                .json({ error: 'Failed to modify goal' });
+            return response.status(BAD_REQUEST).json({ error: FAIL_TO_MODIFY });
         }
-        response.status(200).json({ message: 'Goal modified successfully' });
+        response.status(OK).json({ message: SUCCESS_TO_MODIFY });
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error('Error modifying goal:', error.message);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         } else {
             console.error('Unknown error modifying goal:', error);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 });
@@ -93,18 +123,20 @@ goalRouter.delete('/:id', async (request: Request, response: Response) => {
         const goalId = request.params.id;
         const removed = await removeGoal(goalId); // Assuming removeGoal is a function that removes a goal
         if (!removed) {
-            return response
-                .status(400)
-                .json({ error: 'Failed to remove goal' });
+            return response.status(BAD_REQUEST).json({ error: FAIL_TO_REMOVE });
         }
-        response.status(200).json({ message: 'Goal removed successfully' });
+        response.status(OK).json({ message: SUCCESS_TO_REMOVE });
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error('Error removing goal:', error.message);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         } else {
             console.error('Unknown error removing goal:', error);
-            response.status(500).json({ error: 'Internal server error' });
+            response
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         }
     }
 });
