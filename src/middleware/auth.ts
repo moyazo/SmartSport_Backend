@@ -1,48 +1,94 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import db from '../../models';
+import { Model } from 'sequelize-typescript';
+import jwt, {
+    JwtPayload,
+    TokenExpiredError,
+    JsonWebTokenError,
+} from 'jsonwebtoken';
+import logger from '../utils/logger';
+import {
+    NOT_FOUND_MESSAGE,
+    INTERNAL_SERVER_ERROR,
+    UNAUTHORIZED,
+    UNAUTHENTICATED,
+    INVALID_TOKEN,
+    TOKEN_EXPIRED,
+    INTERNAL_SERVER_ERROR_MESSAGE,
+} from '../common/constants';
 
-const userModel = db.sequelize.models.User;
-const TOKEN_SECRET: string = process.env.TOKEN_SECRET || '';
-
-interface AuthenticatedRequest extends Request {
-    user?: { id: string; email: string };
+declare global {
+    namespace Express {
+        interface Request {
+            user?: { id: string; email: string };
+        }
+    }
 }
 
-const ensureAuthentication = async (
-    req: AuthenticatedRequest,
-    res: Response,
-    next: NextFunction
-) => {
-    if (req.path.includes('/auth')) return next();
-
-    const token = req.cookies?.token;
-
-    if (!token) {
-        return res.status(403).json('You are not authenticated');
+export const ensureAuthentication = (userModel: typeof Model) => {
+    const TOKEN_SECRET = process.env.TOKEN_SECRET;
+    if (!TOKEN_SECRET) {
+        // Fail fast: que la app no arranque si falta SECRET
+        throw new Error('TOKEN_SECRET is not defined in environment variables');
     }
 
-    try {
-        const payload = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token =
+                (req.headers.authorization?.startsWith('Bearer ')
+                    ? req.headers.authorization.slice(7)
+                    : req.cookies?.token) || null;
 
-        if (!payload.email) {
-            console.error('Invalid token payload:', payload);
-            return res.status(403).json('Invalid token payload');
+            if (!token)
+                return res
+                    .status(UNAUTHORIZED)
+                    .json({ error: UNAUTHENTICATED });
+
+            const payload = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
+
+            const email = payload.email as string | undefined;
+            const sub = payload.sub as string | undefined;
+
+            if (!email && !sub)
+                return res.status(UNAUTHORIZED).json({ error: INVALID_TOKEN });
+
+            const userQuery = email
+                ? { where: { email } }
+                : { where: { id: sub } };
+            const userFound = await (userModel as any).findOne({
+                ...userQuery,
+                attributes: ['id', 'email'],
+            });
+
+            if (!userFound)
+                return res
+                    .status(UNAUTHORIZED)
+                    .json({ error: NOT_FOUND_MESSAGE });
+
+            req.user = {
+                id: String(userFound.get('id')),
+                email: String(userFound.get('email')),
+            };
+            logger.info('Authenticated request', {
+                path: req.path,
+                userId: req.user.id,
+            });
+
+            next();
+        } catch (err: any) {
+            if (err instanceof TokenExpiredError)
+                return res.status(UNAUTHORIZED).json({ error: TOKEN_EXPIRED });
+            if (err instanceof JsonWebTokenError)
+                return res.status(UNAUTHORIZED).json({ error: INVALID_TOKEN });
+
+            logger.error('Auth middleware unexpected error', {
+                path: req.path,
+                err,
+            });
+            return res
+                .status(INTERNAL_SERVER_ERROR)
+                .json({ error: INTERNAL_SERVER_ERROR_MESSAGE });
         }
-
-        const userFound = await userModel.findOne({
-            where: { email: payload.email },
-        });
-
-        if (!userFound) {
-            return res.status(403).json('Wrong token');
-        }
-
-        req.user = { id: userFound.id, email: userFound.email };
-        next();
-    } catch (err) {
-        return res.status(403).json('Token verification failed');
-    }
+    };
 };
 
 export default ensureAuthentication;

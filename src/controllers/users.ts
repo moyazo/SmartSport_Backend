@@ -32,13 +32,12 @@ export const getByEmail = async (
     if (!email) {
         return null;
     }
-    console.log(email);
     const userFound = await user.findOne({ where: { email } });
     if (!userFound) {
         return null;
     }
 
-    return userFound;
+    return userFound.dataValues;
 };
 
 export const createUser = async (
